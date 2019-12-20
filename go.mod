@@ -32,7 +32,7 @@ require (
 	github.com/mitchellh/copystructure v1.0.0 // indirect
 	github.com/morikuni/aec v1.0.0 // indirect
 	github.com/onsi/ginkgo v1.10.1 // indirect
-	github.com/onsi/gomega v1.7.0
+	github.com/onsi/gomega v1.7.0 // indirect
 	github.com/opencontainers/image-spec v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/prometheus/client_golang v1.0.0 // indirect
