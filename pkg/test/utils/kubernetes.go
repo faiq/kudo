@@ -49,7 +49,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/apiutil"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
-	kindConfig "sigs.k8s.io/kind/pkg/apis/config/v1alpha3"
 
 	"github.com/kudobuilder/kudo/pkg/apis"
 	kudo "github.com/kudobuilder/kudo/pkg/apis/kudo/v1beta1"
@@ -356,8 +355,6 @@ func ConvertUnstructured(in runtime.Object) (runtime.Object, error) {
 		converted = &kudo.TestAssert{}
 	} else if group == "kudo.dev" && kind == "TestSuite" {
 		converted = &kudo.TestSuite{}
-	} else if group == "kind.sigs.k8s.io" && kind == "Cluster" {
-		converted = &kindConfig.Cluster{}
 	} else {
 		return in, nil
 	}
@@ -943,7 +940,7 @@ func RunCommands(logger Logger, namespace string, command string, commands []kud
 		stdout := &bytes.Buffer{}
 		stderr := &bytes.Buffer{}
 
-		logger.Log("Running command:", cmd)
+		logger.Logf("Running command: %s %s", command, cmd)
 
 		err := RunCommand(context.TODO(), namespace, command, cmd, workdir, stdout, stderr)
 		if err != nil {
