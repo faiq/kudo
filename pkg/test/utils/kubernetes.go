@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -1001,7 +1002,16 @@ func Kubeconfig(cfg *rest.Config, w io.Writer) error {
 			})
 		}
 	}
-
+	var CAData []byte
+	var err error
+	if len(cfg.TLSClientConfig.KeyData) != 0 {
+		CAData = cfg.TLSClientConfig.CAData
+	} else if cfg.TLSClientConfig.CAFile != "" {
+		CAData, err = ioutil.ReadFile(cfg.CAFile)
+	}
+	if err != nil {
+		log.Printf("Hit error %v in getting ca info from secret", err)
+	}
 	return json.NewYAMLSerializer(json.DefaultMetaFactory, nil, nil).Encode(&api.Config{
 		CurrentContext: "cluster",
 		Clusters: []api.NamedCluster{
@@ -1009,7 +1019,7 @@ func Kubeconfig(cfg *rest.Config, w io.Writer) error {
 				Name: "cluster",
 				Cluster: api.Cluster{
 					Server:                   cfg.Host,
-					CertificateAuthorityData: cfg.TLSClientConfig.CAData,
+					CertificateAuthorityData: CAData,
 					InsecureSkipTLSVerify:    cfg.TLSClientConfig.Insecure,
 				},
 			},
